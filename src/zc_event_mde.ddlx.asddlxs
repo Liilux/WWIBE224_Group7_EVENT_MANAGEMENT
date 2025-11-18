@@ -172,6 +172,8 @@ annotate view ZC_EVENTTP with
 
   @UI.identification: [{ position: 80 }]
   Description;
+  
+  //Test
 
   /* Admin Data Group */
   @UI.fieldGroup: [{ qualifier: 'AdminData', position: 10 }]
