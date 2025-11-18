@@ -1,0 +1,55 @@
+@Metadata.layer: #CUSTOMER
+@UI.headerInfo: {
+    typeName: 'Registration',
+    typeNamePlural: 'Registrations',
+    title: { value: 'RegistrationId' },
+    description: { value: 'Status' }
+}
+annotate view ZC_RegistrationTP_LK with
+{
+  @UI.hidden: true
+  RegistrationUuid;
+  
+  @UI.hidden: true
+  EventUuid;
+
+  /* ------------------------------------------------------ */
+  /* ID + BUTTONS (Alles an einem Feld)                     */
+  /* ------------------------------------------------------ */
+  @UI.lineItem: [
+    { position: 10 },  -- Die ID selbst
+    { type: #FOR_ACTION, dataAction: 'ApproveRegistration', label: 'Approve', position: 10 },
+    { type: #FOR_ACTION, dataAction: 'RejectRegistration', label: 'Reject', position: 20 }
+  ]
+  @UI.identification: [
+    { position: 10 },  -- Die ID selbst
+    { type: #FOR_ACTION, dataAction: 'ApproveRegistration', label: 'Approve', position: 10 },
+    { type: #FOR_ACTION, dataAction: 'RejectRegistration', label: 'Reject', position: 20 }
+  ]
+  RegistrationId;
+
+  /* ------------------------------------------------------ */
+  /* TEILNEHMER                                             */
+  /* ------------------------------------------------------ */
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  ParticipantUuid; 
+
+  /* ------------------------------------------------------ */
+  /* STATUS (Filterbar)                                     */
+  /* ------------------------------------------------------ */
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  @UI.selectionField: [{ position: 10 }]
+  Status;
+
+  /* ------------------------------------------------------ */
+  /* BEMERKUNGEN                                            */
+  /* ------------------------------------------------------ */
+  @UI.lineItem: [{ position: 40 }]
+  @UI.identification: [{ position: 40 }]
+  Remarks;
+
+  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 10 }]
+  CreatedBy;
+}

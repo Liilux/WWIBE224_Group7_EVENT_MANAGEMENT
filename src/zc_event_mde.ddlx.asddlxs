@@ -1,0 +1,185 @@
+//@Metadata.layer: #CUSTOMER
+//@UI.presentationVariant: [{ qualifier: 'Default' }]
+//@UI.headerInfo: {
+//    typeName: 'Registration',
+//    typeNamePlural: 'Registrations',
+//    title: { value: 'RegistrationId' },
+//    description: { value: 'Status' }
+//}
+//annotate view ZC_RegistrationTP_LK with
+//{
+//  @UI.hidden: true
+//  RegistrationUuid;
+//  
+//  @UI.hidden: true
+//  EventUuid;
+//
+//  // --- ID & Action Buttons ---
+//  @UI.lineItem: [
+//    { position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'ApproveRegistration', label: 'Approve', position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'RejectRegistration', label: 'Reject', position: 20 }
+//  ]
+//  @UI.identification: [
+//    { position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'ApproveRegistration', label: 'Approve', position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'RejectRegistration', label: 'Reject', position: 20 }
+//  ]
+//  RegistrationId;
+//
+//  // --- Participant ---
+//  @UI.lineItem: [{ position: 20 }]
+//  @UI.identification: [{ position: 20 }]
+//  ParticipantUuid; 
+//
+//  // --- Status (mit Filter) ---
+//  @UI.lineItem: [{ position: 30 }]
+//  @UI.identification: [{ position: 30 }]
+//  @UI.selectionField: [{ position: 10 }]
+//  Status;
+//
+//  // --- Remarks ---
+
+
+//@EndUserText.label: 'Event Projection View'
+//@AccessControl.authorizationCheck: #NOT_REQUIRED
+//@Search.searchable: true
+//@Metadata.allowExtensions: true
+//@Consumption.filter.automatic: true // FIX: Automatische Datenladung beim Start
+//define root view entity ZC_EVENTTP
+//  provider contract transactional_query
+//  as projection on ZR_EVENTTP
+//
+//{
+//  key EventUuid,
+//      EventId,
+//      @Search.defaultSearchElement: true
+//      Title,
+//      @Search.defaultSearchElement: true
+//      @Search.fuzzinessThreshold: 0.7
+//      Location,
+//      StartDate,
+//      EndDate,
+//      MaxParticipants,
+//      Status,
+//      
+//      StatusText, // Berechnetes Feld aus ZR_EVENTTP
+//      
+//      @Search.defaultSearchElement: true
+//      Description,
+//      
+//      /* Administrative Data */
+//      CreatedBy,
+//      CreatedAt,
+//      LastChangedBy,
+//      LastChangedAt,
+//      
+//      /* Associations */
+//      _Registrations : redirected to composition child ZC_RegistrationTP_LK
+//}
+
+@Metadata.layer: #CUSTOMER
+// **FIX:** Der ungültige Eintrag 'requestAllFields' wurde entfernt.
+@UI.presentationVariant: [{
+    qualifier: 'Default',
+    text: 'Default Layout',
+    sortOrder: [{ by: 'StartDate', direction: #DESC }] // Anforderung: Sortierung
+}]
+@UI.headerInfo: {
+    typeNamePlural: 'Events',
+    typeName: 'Event',
+    title.value: 'Title',
+    description.value: 'Description'
+}
+annotate view ZC_EVENTTP with
+{
+  /* ------------------------------------------------------ */
+  /* Facets (Bereiche auf der Detailseite)                  */
+  /* ------------------------------------------------------ */
+  @UI.facet: [
+    {
+      id: 'EventInfo',
+      purpose: #STANDARD,
+      type: #IDENTIFICATION_REFERENCE,
+      label: 'Event Details',
+      position: 10
+    },
+    {
+      id: 'AdminInfo',
+      purpose: #STANDARD,
+      type: #FIELDGROUP_REFERENCE,
+      targetQualifier: 'AdminData',
+      label: 'Administrative Data',
+      position: 20
+    },
+    {
+      id: 'Registrations',
+      purpose: #STANDARD,
+      type: #LINEITEM_REFERENCE,
+      targetElement: '_Registrations',
+      label: 'Registrations',
+      position: 30,
+      targetQualifier: 'Default' 
+    }
+  ]
+
+  /* ------------------------------------------------------ */
+  /* Fields (Spalten & Filter & Buttons)                    */
+  /* ------------------------------------------------------ */
+
+  @UI.hidden: true
+  EventUuid;
+
+  // Hier fügen wir die BUTTONS hinzu:
+  @UI.lineItem: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'OpenEvent', label: 'Open Event', position: 10 },
+    { type: #FOR_ACTION, dataAction: 'CloseEvent', label: 'Close Event', position: 20 }
+  ]
+  @UI.identification: [
+    { position: 10 },
+    { type: #FOR_ACTION, dataAction: 'OpenEvent', label: 'Open Event', position: 10 },
+    { type: #FOR_ACTION, dataAction: 'CloseEvent', label: 'Close Event', position: 20 }
+  ]
+  @UI.selectionField: [{ position: 10 }]
+  EventId;
+
+  @UI.lineItem: [{ position: 20 }]
+  @UI.identification: [{ position: 20 }]
+  Title;
+
+  @UI.lineItem: [{ position: 30 }]
+  @UI.identification: [{ position: 30 }]
+  Location;
+
+  @UI.lineItem: [{ position: 40 }]
+  @UI.identification: [{ position: 40 }]
+  @UI.selectionField: [{ position: 20 }]
+  StartDate;
+
+  @UI.lineItem: [{ position: 50 }]
+  @UI.identification: [{ position: 50 }]
+  EndDate;
+
+  @UI.identification: [{ position: 60 }]
+  MaxParticipants;
+
+  @UI.identification: [{ position: 70 }]
+  Status;
+
+  @UI.lineItem: [{ position: 60, label: 'Status' }]
+  StatusText;
+
+  @UI.identification: [{ position: 80 }]
+  Description;
+
+  /* Admin Data Group */
+  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 10 }]
+  CreatedBy;
+  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 20 }]
+  CreatedAt;
+  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 30 }]
+  LastChangedBy;
+  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 40 }]
+  LastChangedAt;
+}

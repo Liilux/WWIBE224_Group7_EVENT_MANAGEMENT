@@ -1,0 +1,25 @@
+projection;
+strict ( 2 );
+
+define behavior for ZC_EventTP_LK alias Event
+{
+  use create;   // <--- HIER MUSS ES STEHEN
+  use update;
+  use delete;
+
+  use association _Registrations { create; }
+
+  use action OpenEvent;
+  use action CloseEvent;
+}
+
+define behavior for ZC_RegistrationTP_LK alias Registration
+{
+  use update;
+  use delete;
+
+  use association _Event;
+
+  use action ApproveRegistration;
+  use action RejectRegistration;
+}
