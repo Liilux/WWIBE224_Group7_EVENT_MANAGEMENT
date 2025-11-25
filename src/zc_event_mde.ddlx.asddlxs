@@ -78,8 +78,122 @@
 //      _Registrations : redirected to composition child ZC_RegistrationTP_LK
 //}
 
+
+//-------------------------------
+
+
+//@Metadata.layer: #CUSTOMER
+//// **FIX:** Der ungültige Eintrag 'requestAllFields' wurde entfernt.
+//@UI.presentationVariant: [{
+//    qualifier: 'Default',
+//    text: 'Default Layout',
+//    sortOrder: [{ by: 'StartDate', direction: #DESC }] // Anforderung: Sortierung
+//}]
+//@UI.headerInfo: {
+//    typeNamePlural: 'Events',
+//    typeName: 'Event',
+//    title.value: 'Title',
+//    description.value: 'Description'
+//}
+//annotate view ZC_EVENTTP with
+//{
+//  /* ------------------------------------------------------ */
+//  /* Facets (Bereiche auf der Detailseite)                  */
+//  /* ------------------------------------------------------ */
+//  @UI.facet: [
+//    {
+//      id: 'EventInfo',
+//      purpose: #STANDARD,
+//      type: #IDENTIFICATION_REFERENCE,
+//      label: 'Event Details',
+//      position: 10
+//    },
+//    {
+//      id: 'AdminInfo',
+//      purpose: #STANDARD,
+//      type: #FIELDGROUP_REFERENCE,
+//      targetQualifier: 'AdminData',
+//      label: 'Administrative Data',
+//      position: 20
+//    },
+//    {
+//      id: 'Registrations',
+//      purpose: #STANDARD,
+//      type: #LINEITEM_REFERENCE,
+//      targetElement: '_Registrations',
+//      label: 'Registrations',
+//      position: 30,
+//      targetQualifier: 'Default' 
+//    }
+//  ]
+//
+//  /* ------------------------------------------------------ */
+//  /* Fields (Spalten & Filter & Buttons)                    */
+//  /* ------------------------------------------------------ */
+//
+//  @UI.hidden: true
+//  EventUuid;
+//
+//  // Hier fügen wir die BUTTONS hinzu:
+//  @UI.lineItem: [
+//    { position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'OpenEvent', label: 'Open Event', position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'CloseEvent', label: 'Close Event', position: 20 }
+//  ]
+//  @UI.identification: [
+//    { position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'OpenEvent', label: 'Open Event', position: 10 },
+//    { type: #FOR_ACTION, dataAction: 'CloseEvent', label: 'Close Event', position: 20 }
+//  ]
+//  @UI.selectionField: [{ position: 10 }]
+//  EventId;
+//
+//  @UI.lineItem: [{ position: 20 }]
+//  @UI.identification: [{ position: 20 }]
+//  Title;
+//
+//  @UI.lineItem: [{ position: 30 }]
+//  @UI.identification: [{ position: 30 }]
+//  Location;
+//
+//  @UI.lineItem: [{ position: 40 }]
+//  @UI.identification: [{ position: 40 }]
+//  @UI.selectionField: [{ position: 20 }]
+//  StartDate;
+//
+//  @UI.lineItem: [{ position: 50 }]
+//  @UI.identification: [{ position: 50 }]
+//  EndDate;
+//
+//  @UI.identification: [{ position: 60 }]
+//  MaxParticipants;
+//
+//  @UI.identification: [{ position: 70 }]
+//  Status;
+//
+//  @UI.lineItem: [{ position: 60, label: 'Status' }]
+//  StatusText;
+//
+//  @UI.identification: [{ position: 80 }]
+//  Description;
+//  
+//  //Test
+//
+//  /* Admin Data Group */
+//  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 10 }]
+//  CreatedBy;
+//  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 20 }]
+//  CreatedAt;
+//  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 30 }]
+//  LastChangedBy;
+//  @UI.fieldGroup: [{ qualifier: 'AdminData', position: 40 }]
+//  LastChangedAt;
+//}
+
+
+//------------------------
+
 @Metadata.layer: #CUSTOMER
-// **FIX:** Der ungültige Eintrag 'requestAllFields' wurde entfernt.
 @UI.presentationVariant: [{
     qualifier: 'Default',
     text: 'Default Layout',
@@ -91,7 +205,7 @@
     title.value: 'Title',
     description.value: 'Description'
 }
-annotate view ZC_EVENTTP with
+annotate view ZC_EventTP_LK with
 {
   /* ------------------------------------------------------ */
   /* Facets (Bereiche auf der Detailseite)                  */
@@ -130,13 +244,15 @@ annotate view ZC_EVENTTP with
   @UI.hidden: true
   EventUuid;
 
-  // Hier fügen wir die BUTTONS hinzu:
+  // --- HIER: Der explizite Create Button (Workaround) ---
   @UI.lineItem: [
-    { position: 10 },
+    { position: 5, type: #FOR_ACTION, dataAction: 'CreateNewEvent', label: 'Create Event' }, // FIX: Create Button
+    { position: 10 }, // EventId Position
     { type: #FOR_ACTION, dataAction: 'OpenEvent', label: 'Open Event', position: 10 },
     { type: #FOR_ACTION, dataAction: 'CloseEvent', label: 'Close Event', position: 20 }
   ]
   @UI.identification: [
+    { position: 5, type: #FOR_ACTION, dataAction: 'CreateNewEvent', label: 'Create Event' }, // FIX: Create Button
     { position: 10 },
     { type: #FOR_ACTION, dataAction: 'OpenEvent', label: 'Open Event', position: 10 },
     { type: #FOR_ACTION, dataAction: 'CloseEvent', label: 'Close Event', position: 20 }

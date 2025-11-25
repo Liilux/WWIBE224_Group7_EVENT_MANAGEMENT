@@ -1,6 +1,5 @@
 @EndUserText.label: 'Service Definition for Event App'
 define service ZUI_EVENT_LK {
-  expose ZC_EVENTTP           as Event;
-  expose ZC_RegistrationTP_LK as Registration;
-  expose ZC_ParticipantTP_LK  as Participant;
+  expose ZC_EVENTTP          as Event;
+  expose ZC_ParticipantTP_LK as Participant;
 }

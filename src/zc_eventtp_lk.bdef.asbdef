@@ -1,9 +1,45 @@
+//projection;
+//strict ( 2 );
+//use draft; // WICHTIG: Sagt der UI, dass Draft aktiv ist
+//
+//define behavior for ZC_EventTP_LK alias Event
+//{
+//  use create;
+//  use update;
+//  use delete;
+//
+//  // --- WICHTIG: Diese Aktionen müssen für Draft freigegeben werden ---
+//  use action Edit;
+//  use action Activate;
+//  use action Discard;
+//  use action Prepare;
+//  use action Resume;
+//  // ------------------------------------------------------------------
+//
+//  use association _Registrations { create; with draft; }
+//
+//  use action OpenEvent;
+//  use action CloseEvent;
+//}
+//
+//define behavior for ZC_RegistrationTP_LK alias Registration
+//{
+//  use update;
+//  use delete;
+//
+//  use association _Event { with draft; }
+//
+//  use action ApproveRegistration;
+//  use action RejectRegistration;
+//  use action CreateNewEvent;
+//}
+
 projection;
 strict ( 2 );
 
-define behavior for ZC_EventTP_LK alias Event
+define behavior for ZC_EventTP_LK alias Event // Oder ZC_EventTP, je nach deinem Namen
 {
-  use create;   // <--- HIER MUSS ES STEHEN
+  use create;
   use update;
   use delete;
 

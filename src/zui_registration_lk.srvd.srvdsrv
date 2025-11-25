@@ -1,0 +1,4 @@
+@EndUserText.label: 'Service for Registration Monitor'
+define service ZUI_REGISTRATION_LK {
+  expose ZC_RegistrationTP_LK as Registration;
+}

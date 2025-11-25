@@ -33,3 +33,4 @@ define root view entity ZC_EventTP_LK
       /* Associations */
       _Registrations : redirected to composition child ZC_RegistrationTP_LK
 }
+

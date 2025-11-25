@@ -1,10 +1,115 @@
+//managed implementation in class zbp_eventtp unique;
+//strict ( 2 );
+//with draft;
+//
+//define behavior for ZR_EVENTTP alias Event
+//persistent table zevent_lk_a
+//draft table zevent_d
+//lock master
+//total etag LastChangedAt
+//authorization master ( instance ) // Autorisierung beibehalten
+//{
+//  create;
+//
+//    // HIER GEHÖRT DIE AKTION HIN (INNERHALB DER KLAMMER)
+//  static action CreateNewEvent result [1] $self; // NEU: Statische Aktion für den Button
+//
+//  update;
+//  delete;
+//
+//draft action Edit;
+//  draft action Activate;
+//  draft action Discard;
+//  draft action Resume;
+//  draft determine action Prepare;
+//
+//  association _Registrations { create; with draft; }
+//
+//  // Actions
+//  action OpenEvent result [1] $self;
+//  action CloseEvent result [1] $self;
+//
+//  // Logik
+//  determination DetermineEventId on modify { create; }
+//  determination DetermineStatus on modify { create; }
+//  validation ValidateDates on save { create; field StartDate, EndDate; }
+//
+//  // Pflichtfelder
+//  field ( mandatory : create ) Title, Location, StartDate, EndDate, MaxParticipants, Description;
+//
+//  // Read-only fields
+//  field ( readonly, numbering : managed ) EventUuid;
+//  field ( readonly ) EventId, Status, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
+//
+//  mapping for zevent_lk_a corresponding
+//    {
+//      EventUuid = event_uuid;
+//      EventId = event_id;
+//      Title = title;
+//      Location = location;
+//      StartDate = start_date;
+//      EndDate = end_date;
+//      MaxParticipants = max_participants;
+//      Status = status;
+//      Description = description;
+//      CreatedBy = created_by;
+//      CreatedAt = created_at;
+//      LastChangedBy = last_changed_by;
+//      LastChangedAt = last_changed_at;
+//    }
+//}
+//
+//define behavior for ZR_REGISTRATIONTP alias Registration
+//persistent table zregistration_lk
+//draft table zregist_d
+//lock dependent by _Event
+//authorization dependent by _Event
+//{
+//  update;
+//  delete;
+//
+//  association _Event { with draft; }
+//
+//  // Actions
+//  action ApproveRegistration result [1] $self;
+//  action RejectRegistration result [1] $self;
+//
+//  // Logik
+//  determination DetermineRegistrationId on modify { create; }
+//  determination DetermineRegistrationStatus on modify { create; }
+//  validation ValidateMaxParticipants on save { create; }
+//
+//  // Pflichtfelder
+//  field ( mandatory : create ) ParticipantUuid;
+//
+//  // Read-only fields
+//  field ( readonly, numbering : managed ) RegistrationUuid;
+//  field ( readonly ) EventUuid, RegistrationId, Status, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
+//
+//  mapping for zregistration_lk corresponding
+//    {
+//      RegistrationUuid = registration_uuid;
+//      RegistrationId = registration_id;
+//      EventUuid = event_uuid;
+//      ParticipantUuid = participant_uuid;
+//      Status = status;
+//      Remarks = remarks;
+//      CreatedBy = created_by;
+//      CreatedAt = created_at;
+//      LastChangedBy = last_changed_by;
+//      LastChangedAt = last_changed_at;
+//    }
+//}
+
+
 managed implementation in class zbp_eventtp unique;
 strict ( 2 );
 
 define behavior for ZR_EVENTTP alias Event
 persistent table zevent_lk_a
 lock master
-authorization master ( none )
+// WICHTIG: Wir nutzen instance, das ist am stabilsten für Edit/Delete
+authorization master ( instance )
 {
   create;
   update;
@@ -12,20 +117,16 @@ authorization master ( none )
 
   association _Registrations { create; }
 
-  // --- Actions (Buttons) ---
+  // Actions
   action OpenEvent result [1] $self;
   action CloseEvent result [1] $self;
 
-  // --- Logik (IDs, Status, Datum) ---
+  // Logik
   determination DetermineEventId on modify { create; }
   determination DetermineStatus on modify { create; }
   validation ValidateDates on save { create; field StartDate, EndDate; }
 
-  // --- PFLICHTFELDER (neu hinzugefügt) ---
-  // Laut Anforderung App 1
   field ( mandatory : create ) Title, Location, StartDate, EndDate, MaxParticipants, Description;
-
-  // --- Schreibgeschützte Felder ---
   field ( readonly, numbering : managed ) EventUuid;
   field ( readonly ) EventId, Status, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
 
@@ -47,9 +148,6 @@ authorization master ( none )
     }
 }
 
-/* --------------------------------------------------------------- */
-/* Behavior für CHILD: REGISTRATION (App 2)                        */
-/* --------------------------------------------------------------- */
 define behavior for ZR_REGISTRATIONTP alias Registration
 persistent table zregistration_lk
 lock dependent by _Event
@@ -57,23 +155,16 @@ authorization dependent by _Event
 {
   update;
   delete;
-
   association _Event;
 
-  // --- Actions (Buttons) ---
   action ApproveRegistration result [1] $self;
   action RejectRegistration result [1] $self;
 
-  // --- Logik (ID, Status, Max Teilnehmer) ---
   determination DetermineRegistrationId on modify { create; }
   determination DetermineRegistrationStatus on modify { create; }
   validation ValidateMaxParticipants on save { create; }
 
-  // --- PFLICHTFELDER (neu hinzugefügt) ---
-  // Laut Anforderung App 1/2
   field ( mandatory : create ) ParticipantUuid;
-
-  // --- Schreibgeschützte Felder ---
   field ( readonly, numbering : managed ) RegistrationUuid;
   field ( readonly ) EventUuid, RegistrationId, Status, CreatedAt, CreatedBy, LastChangedAt, LastChangedBy;
 
