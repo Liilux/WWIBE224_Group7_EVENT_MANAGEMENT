@@ -2,4 +2,5 @@
 define service ZUI_EVENT_LK {
   expose ZC_EventTP_LK       as Event;
   expose ZC_ParticipantTP_LK as Participant;
+  expose ZC_RegistrationTP_LK as Registration;
 }
