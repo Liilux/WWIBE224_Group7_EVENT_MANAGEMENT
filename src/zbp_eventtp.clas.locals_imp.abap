@@ -238,6 +238,9 @@ CLASS lhc_Event DEFINITION INHERITING FROM cl_abap_behavior_handler.
     METHODS get_instance_authorizations FOR INSTANCE AUTHORIZATION
       IMPORTING keys REQUEST requested_authorizations FOR Event RESULT result.
 
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+      IMPORTING REQUEST requested_authorizations FOR Event RESULT result.
+
     " ... (Die restlichen Methoden-Definitionen bleiben hier weg für Übersicht,
     " aber wenn Sie den Code von vorhin noch haben, lassen Sie die LOGIK-Methoden drin.
     " WICHTIG ist nur die authorization Methode unten!)
@@ -260,6 +263,12 @@ CLASS lhc_Event IMPLEMENTATION.
       %action-OpenEvent = if_abap_behv=>auth-allowed
       %action-CloseEvent = if_abap_behv=>auth-allowed
     ) ).
+  ENDMETHOD.
+
+  METHOD get_global_authorizations.
+    IF requested_authorizations-%create = if_abap_behv=>mk-on.
+      result-%create = if_abap_behv=>auth-allowed.
+    ENDIF.
   ENDMETHOD.
 
   " ... Fügen Sie hier Ihre Logik-Methoden (DetermineEventId, etc.) von vorhin wieder ein ...

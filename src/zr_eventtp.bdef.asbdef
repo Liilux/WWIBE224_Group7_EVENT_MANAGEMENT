@@ -153,9 +153,10 @@ persistent table zregistration_lk
 lock dependent by _Event
 authorization dependent by _Event
 {
+  create;
   update;
   delete;
-  association _Event;
+  association _Event { create; };
 
   action ApproveRegistration result [1] $self;
   action RejectRegistration result [1] $self;

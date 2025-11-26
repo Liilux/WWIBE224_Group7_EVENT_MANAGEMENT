@@ -51,6 +51,7 @@ define behavior for ZC_EventTP_LK alias Event // Oder ZC_EventTP, je nach deinem
 
 define behavior for ZC_RegistrationTP_LK alias Registration
 {
+  use create;
   use update;
   use delete;
 
